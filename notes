@@ -1,0 +1,71 @@
+common question types: 
+1. find distinct/unique values, return in list 
+question: when is using a nested for loop required? when can you avoid it? 
+hashmaps are more efficient than arrays 
+
+
+
+common patterns to solve those question types: 
+1. nested for loop, using boolean and additional list to track result 
+
+
+example: 
+
+https://leetcode.com/problems/kth-distinct-string-in-an-array/?envType=daily-question&envId=2024-08-05
+
+
+faster answer: 
+class Solution {
+    public String kthDistinct(String[] arr, int k) {
+        Map<String, Integer> countMap = new HashMap<>();
+
+        // Count occurrences of each string
+        for (String s : arr) {
+            countMap.put(s, countMap.getOrDefault(s, 0) + 1);
+        }
+
+        // Identify distinct strings in order and find the kth distinct
+        int distinctCount = 0;
+        for (String s : arr) {
+            if (countMap.get(s) == 1) {
+                distinctCount++;
+                if (distinctCount == k) {
+                    return s;
+                }
+            }
+        }
+
+        // If there are fewer than k distinct strings, return an empty string
+        return "";
+    }
+}
+
+my answer:
+class Solution {
+    public String kthDistinct(String[] arr, int k) {
+        List<String> distinctItems = new ArrayList<String>();
+        if(arr.length == 1 && k == 1) return arr[0];
+        for(int i = 0; i<arr.length; i++) {
+            Boolean distinct = false;
+            String element1 = arr[i];
+            for(int j = 0; j<arr.length; j++) {
+                String element2 = arr[j];
+                if (j == i) continue;
+                if (!element1.equals(element2)) {
+                    distinct = true;
+                } else if (element1.equals(element2)){
+                    distinct = false;
+                    break;
+                }
+            }
+            if(distinct) {
+                distinctItems.add(element1);
+            }
+        }
+        if (distinctItems.size() == 0 || distinctItems.size() < k) {
+            return "";
+        } else {
+            return distinctItems.get(k-1);
+        }
+    }
+}
